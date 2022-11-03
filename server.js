@@ -15,19 +15,22 @@ app.use(cors())
 const sequelize = require("./config/connection");
 
 
+// users routes
+app.use(require("./routes/auth_Routes"))
+
 // catalog routes
-app.use(require("./routes/catalogRoutes"))
+app.use(require("./routes/catalog_Routes"))
 
 // Catalog Types routes
-app.use(require("./routes/catalogTypeRoutes"))
+app.use(require("./routes/catalogType_Routes"))
 
 // Product Types routes
-app.use(require("./routes/productTypeRoutes"))
+app.use(require("./routes/productType_Routes"))
 
 // Product routes
-app.use(require("./routes/productRoutes"))
+app.use(require("./routes/product_Routes"))
 
-const PORT = process.env.PORT|| 5050
+const PORT = process.env.PORT || 5050
 app.listen(PORT,()=>{
     console.log("Servere is running... at port " + PORT)
 })
