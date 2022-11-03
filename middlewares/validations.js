@@ -1,7 +1,16 @@
 module.exports.validateUserInput = async (req, res, next) => {
 
-    if (!req.body.email || !req.body.username || !req.body.password) {
-        return res.status(400).send("Please fill all fields")
+    console.log(req.body);
+
+    if (!req.body.email || !req.body.address || !req.body.username || !req.body.password) {
+        return res.status(400).send({
+            error: "Please provide all required fields for this API"
+        })
+    }
+    if (!req.files) {
+        return res.status(400).send({
+            error: "Please upalod image"
+        })
     }
     else {
         if (!validateEmail(req.body.email)) {

@@ -1,4 +1,5 @@
 const multer = require('multer');
+
 exports.uploadUserImage = multer({
     storage: multer.diskStorage({
         destination: 'assets/user-images/',
@@ -6,7 +7,7 @@ exports.uploadUserImage = multer({
             callback(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
         }
     })
-}).single('user-image'); 
+}).single('photo'); 
 
 exports.uploadProductImage = multer({
     storage: multer.diskStorage({

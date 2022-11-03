@@ -4,7 +4,7 @@ const UserModel = require("../models/user_Model")
 
 module.exports.allUsers = async (req, res, next) => {
     try {
-        const users = await UserModel.findAll({})
+        const users = await UserModel.findAll()
         res.json(users)
     } catch (error) {
         console.log(error)
@@ -49,19 +49,42 @@ async function authenticate(req) {
 
 // --------------------------( New user Work)---------------------------------
 module.exports.signup = async (req, res, next) => {
+    try {
+        if (!req.body.email || !req.body.address || !req.body.username || !req.body.password) {
+            return res.status(400).send({
+                error: "Please provide all required fields for this API"
+            })
+        }
+
+        console.log(req.file);
+        if (!req.file) {
+            return res.status(400).send({
+                error: "Please upalod image"
+            })
+        }
+    } catch (error) {
+        return res.status(400).send({
+            error: "required data in not completely provided"
+        })
+    }
     const { username, email, password, address } = req.body;
     try {
-        const find = await UserModel.find({ email: email.trim() })
+        const find = await UserModel.findAll({ 
+            where: { email: email.trim() }
+         })
         if (find.length != 0) {
             return res.status(200).send("user with this email already exist")
         }
+
         const userData = {
-            name: username.trim(),
+            username: username.trim(),
             email: username.trim(),
             password: password.trim(),
             address: address.trim(),
         }
+
         userData.photo = `assets/user-images/${req.file.filename}`;
+
         const userCreated = await UserModel.create(userData);
         if (!userCreated) {
             return res.status(401).send(err);
