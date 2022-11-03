@@ -247,7 +247,7 @@ module.exports.getAllProductsById = async (req, res) => {
         )
         if (result) {
             // to get only one catalog_type for product
-            // result.catalog.catalog_types.length = 1
+            // result && result.catalog && result.catalog.catalog_types && (result.catalog.catalog_types.length = 1)
             res.status(200).send({
                 message: "search result",
                 products: result,
