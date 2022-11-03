@@ -38,6 +38,9 @@ module.exports.getAllCatalogs = async (req, res) => {
         const result = await CatalogModel.findAll({
             include: [{
                 model: CatalogTypeModel,
+            },
+            {
+                model: ProductModel,
             }]
         })
         if (result) {
@@ -72,8 +75,8 @@ module.exports.getSingleCatalog = async (req, res) => {
         const result = await CatalogModel.findByPk(req.params.cId, checkCatalogType && {
             include: [{
                 model: CatalogTypeModel,
-                
-            },{
+
+            }, {
                 model: ProductModel,
             }]
         })
@@ -115,8 +118,8 @@ module.exports.updateCatalog = async (req, res) => {
                 catalog_id: req.params.cId
             }
         });
-        
-        if (result!=0) {
+
+        if (result != 0) {
             const find = await CatalogModel.findByPk(req.params.cId, {
                 include: [{
                     model: CatalogTypeModel,
@@ -154,7 +157,7 @@ module.exports.removeCatalog = async (req, res) => {
                 model: ProductModel,
             }]
         });
-        
+
         if (!deletedData) {
             return res.status(200).send({
                 Error: "The catalog which you are tryong to removed i not found in system",
@@ -169,7 +172,7 @@ module.exports.removeCatalog = async (req, res) => {
                 catalog_id: req.params.cId
             }
         })
-        if (result!=0) {
+        if (result != 0) {
             return res.status(200).send({
                 message: "catalog removed successfully",
                 deletedCatalog: deletedData,

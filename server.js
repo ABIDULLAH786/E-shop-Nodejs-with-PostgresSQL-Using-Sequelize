@@ -16,16 +16,19 @@ const sequelize = require("./config/connection");
 
 
 // catalog routes
-app.use(require("./routes/catalogRoutes"))
+app.use(require("./routes/catalog_Routes"))
 
 // Catalog Types routes
-app.use(require("./routes/catalogTypeRoutes"))
+app.use(require("./routes/catalog_TypeRoutes"))
 
 // Product Types routes
-app.use(require("./routes/productTypeRoutes"))
+app.use(require("./routes/productType_Routes"))
 
 // Product routes
-app.use(require("./routes/productRoutes"))
+app.use(require("./routes/product_Routes"))
+
+// auth routes
+app.use(require("./routes/auth_Routes"))
 
 const PORT = process.env.PORT|| 5050
 app.listen(PORT,()=>{
