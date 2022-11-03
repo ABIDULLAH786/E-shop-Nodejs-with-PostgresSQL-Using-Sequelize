@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 
 
 const UserModel = sequelize.define('users', {
-    id: {
+    user_id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true

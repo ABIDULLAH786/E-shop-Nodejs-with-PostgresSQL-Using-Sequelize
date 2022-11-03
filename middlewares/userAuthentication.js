@@ -11,26 +11,33 @@ const authToken = (req, res, next) => {
 
     // If token not found, send error message
     if (!token) {
-        res.status(401).send("Token not found");
+        res.status(401).send({
+            error: "Token not found",
+            hint: "Please add token to req header before hiting this API"
+        });
         return;
     }
 
     // Authenticate token
     try {
-        const user = jwt.verify(token, process.env.JWT_SECRET_KEY);
-        if (user) {
+        const find = jwt.verify(token, process.env.JWT_SECRET_KEY);
+        if (find) {
             next();
         }
 
-    } catch (err) {
+    } catch (error) {
         // Handling wrong JWT error
         if (err.name === 'JsonWebTokenError') {
-            res.status(403).send("JSON Web Token is invalid");
+            res.status(403).send({
+                error: "JSON Web Token is invalid"
+            });
         }
 
         // Handling Expired JWT error
         if (err.name === 'TokenExpiredError') {
-            res.status(400).send("JSON Web Token is expired");
+            res.status(400).send({
+                error: "JSON Web Token is expired"
+            });
         }
 
 
