@@ -12,4 +12,4 @@ Realtions Between Tables
     One Product can have many Catalogs
 ```
 
-![PostgresSQL Schema](https://i.ibb.co/Bsf1vPk/Capture.jpg)
+![PostgresSQL Schema](https://i.ibb.co/bb6hnj8/schema.jpg)
