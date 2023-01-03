@@ -11,23 +11,34 @@ exports.emailVerification = async (req, res) => {
     const { email } = req.body;
     // const userId = req.body.userId;
 
-    const userFoundResult = await UserModel.findOne({ where: { email: email } })
+    try {
+        const userFoundResult = await UserModel.findOne({ where: { email: email } })
 
 
-    // const find = await LoginModel.findAll()
+        // const find = await LoginModel.findAll()
 
 
-
-    const loginFoundResult = await LoginModel.findOne({ where: { user_id: userFoundResult.user_id } })
-
-    console.log("loginFoundResult.email")
-    console.log(loginFoundResult.email)
-    if (loginFoundResult) {
-        sendOTPVerificationEmail(loginFoundResult.user_id, userFoundResult.email, res)
-    }
-    else {
-        res.json({
-            message: "No one found with This Email address",
+        if (userFoundResult) {
+            const loginFoundResult = await LoginModel.findOne({ where: { user_id: userFoundResult.user_id } })
+            if (loginFoundResult) {
+                sendOTPVerificationEmail(loginFoundResult.user_id, userFoundResult.email, res)
+            } else {
+                return res.json({
+                    message: "Login Records Not found",
+                    error: error.message,
+                    status: "failed"
+                })
+            }
+        }
+        else {
+           return res.json({
+                message: "No one found with This Email address",
+                status: "failed"
+            })
+        }
+    } catch (error) {
+        return res.json({
+            message: "Error occured in email vrification",
             status: "failed"
         })
     }
@@ -78,7 +89,7 @@ exports.verifyOTP = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(400).send({
-            message:"Error occured while verifing otp",
+            message: "Error occured while verifing otp",
             error: error
         })
     }
@@ -99,7 +110,6 @@ const sendOTPVerificationEmail = async (user_id, email, res) => {
                 otp: otp,
                 email: email,
             })
-            console.log(newOTPVerif);
             if (newOTPVerif) {
                 console.log("new otp saved");
             } else {
@@ -114,8 +124,6 @@ const sendOTPVerificationEmail = async (user_id, email, res) => {
         }
 
         const mailResponse = sendEmail.sendMailForOTPVerification(otp, email, "E-Shoping");
-        console.log("mailResponse");
-        console.log();
         if (mailResponse == true) {
             return res.status(200).json({
                 message: `Sent a verification email to ${email}`,
@@ -159,10 +167,11 @@ module.exports.updatePassword = async (req, res, next) => {
             // logout user with same credentials if he is already login
             // so he can login with new records
             await LoginModel.destroy({ where: { user_id: find.user_id } })
-            
+
             return res.send({
                 message: "password changed successfully, now you can login again",
                 // new_user_info: find
+                status: "success"
             })
         }
 

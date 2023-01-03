@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../config/connection");
 const UserModel = require("./user_Model");
 
-const UserOTPVerificationModel = sequelize.define('user_OTP_Verification', {
+const UserOTPVerificationModel = sequelize.define('user_otp_verifications', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -20,7 +20,6 @@ const UserOTPVerificationModel = sequelize.define('user_OTP_Verification', {
         type: DataTypes.TEXT,
         allowNull: true
     }
-
 }, {
     timestamps: false
 });

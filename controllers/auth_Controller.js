@@ -23,8 +23,8 @@ module.exports.login = async (req, res, next) => {
         })
     }
     /**
-     * this will return user id or false
-     * if user_id returned then it will validate and genrate token
+     * this will return user_Object or false
+     * if user_Object returned then it will validate and genrate token
      * otherwise error code will send to client 
      */
 
@@ -32,30 +32,32 @@ module.exports.login = async (req, res, next) => {
 
     if (isfound) {
         const accessToken = jwt.sign(
-            { user_id: isfound },
+            { user_id: isfound.user_id },
             process.env.JWT_SECRET_KEY,
             {
                 expiresIn: process.env.JWT_EXPIRES_TIME
             }
         );
 
+        // creating user instance in login_table
         const loginData = {
-            user_id: isfound,
+            user_id: isfound.user_id,
             token: accessToken,
         }
+        await LoginModel.create(loginData)
 
-        const saveLoginInfo = await LoginModel.create(loginData)
-        console.log(saveLoginInfo);
-        res.status(202).json({ accessToken, user_id: isfound, message: "Login Successfully" })
+        // sending success response
+        res.status(202).json({ accessToken, user: isfound, message: "Login Successfully" })
     }
     else
         res.status(404).json({ message: "Invalid Data Entered" })
 }
 
+// helper method for login
 async function authenticate(req) {
     const { email, password } = req.body;
     const user = await UserModel.findOne({
-        where: { email: email.trim() }
+        where: { email: email.trim() },
     });
 
     if (user) {
@@ -63,7 +65,10 @@ async function authenticate(req) {
         const match = await bcrypt.compare(password, user.password);
         console.log(match)
         if (match) {
-            return user.user_id;
+            return await UserModel.findOne({
+                where: { email: email.trim() },
+                attributes: { exclude: ['password'] },
+            });
         }
     } else {
         return false;
